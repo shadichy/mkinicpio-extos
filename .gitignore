@@ -1,0 +1,5 @@
+/mkinitcpio-extos
+/pkg
+/src
+*.pkg.tar*
+/.vscode

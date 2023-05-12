@@ -1,0 +1,38 @@
+#!/usr/bin/sh
+
+_p_has() {
+	disktmp=$(mktemp)
+	rm -f $disktmp
+	mkdir -p $disktmp || true
+	timeout 10 mount -t auto "$1" $disktmp
+	[ -f "$disktmp/$2" ] && [ -b "$1" ]
+	status=$?
+	umount -lf $disktmp
+	return $status
+}
+
+extos_loop_mount_handler() {
+	local remount_limit=0
+	while [ ! "$LOOP_DEV" ] && [ "$remount_limit" -lt 5 ]; do
+		remount_limit=$((remount_limit + 1))
+		device_list=$(ls /sys/class/block/ | grep ".*[0-9]$" | grep -Ev "loop|ram|nbd|fd" | sed "s|^|/dev/|g")
+		for part in $device_list; do
+			sleep 1
+			msg "Looking for: $part"
+			_p_has "$part" "${LOOP_IMG}" && LOOP_DEV=$part
+		done
+	done
+	[ "$LOOP_DEV" ] || _call_err "Device containing $LOOP_IMG was not found!"
+
+	# Mount the device containing the loop disk image
+	local loopfs="/run/extos/loop"
+	_mount_dev "$LOOP_DEV" "$loopfs" "${LOOP_DEV_FSTYPE}" "${LOOP_DEV_FLAGS}"
+
+	export ROOT="$loopfs/$LOOP_IMG"
+	extos_mount_handler "$1"
+}
+
+run_hook() {
+	[ "$LOOP_IMG" ] &&
+		export mount_handler="extos_loop_mount_handler"
+}
