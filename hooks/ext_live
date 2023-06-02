@@ -51,7 +51,6 @@ extos_mount_handler() {
 			timeout 10 mount -t auto "$part" "$disktmp"
 			[ -d "$disktmp/systems" ] &&
 				[ -d "$disktmp/packages" ] &&
-				[ -d "$disktmp/instances" ] &&
 				[ -e "$disktmp/instances/$INSTANCE" ] &&
 				ROOT=$part && break
 			umount -lf "$disktmp"
@@ -86,7 +85,6 @@ extos_mount_handler() {
 			INSTANCEFLAGS="ro,${INSTANCEFLAGS:-defaults}"
 			lowers="$data/overlay:$lowers"
 			;;
-		*) ;;
 		esac
 	fi
 

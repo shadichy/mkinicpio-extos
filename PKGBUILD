@@ -9,5 +9,5 @@ depends=("mkinitcpio")
 package() {
 	# cd "$srcdir/$pkgname"
 	cd ..
-	make install DESTDIR=$pkgdir
+	make DESTDIR=$pkgdir
 }
