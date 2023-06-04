@@ -1,0 +1,16 @@
+#!/bin/bash
+
+build() {
+
+	add_module "loop"
+
+	add_runscript
+
+	add_binary "timeout"
+}
+
+help() {
+	cat <<HELPEOF
+Adds needed modules to the initramfs image.
+HELPEOF
+}

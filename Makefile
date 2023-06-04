@@ -1,10 +1,12 @@
 DESTDIR=/
 
 HOOKS=\
+	dist/hooks/ext_boot \
 	dist/hooks/ext_live \
 	dist/hooks/ext_live_loop \
 
 HOOKINS=\
+	dist/installs/ext_boot \
 	dist/installs/ext_live \
 	dist/installs/ext_live_kms \
 	dist/installs/ext_live_loop \
